@@ -117,7 +117,7 @@ typedef enum type_terminal_charge type_terminal_charge_t;
 /*Represents kind of mutation */
 enum type_mutations {general_rotation, dm_refinement, none};
 
-typedef type_mutations type_mutations_t;
+typedef enum type_mutations type_mutations_t;
 
 #endif
 

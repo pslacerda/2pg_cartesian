@@ -32,6 +32,7 @@ set_source_files_properties(src/LoadConfig.c  PROPERTIES LANGUAGE CXX )
 set_source_files_properties(src/ea_mono.c  PROPERTIES LANGUAGE CXX )
 set_source_files_properties(src/topology.c  PROPERTIES LANGUAGE CXX )
 set_source_files_properties(src/pdbio.c  PROPERTIES LANGUAGE CXX )
+set_source_files_properties(src/pdbqtio.c  PROPERTIES LANGUAGE CXX )
 set_source_files_properties(src/protein.c  PROPERTIES LANGUAGE CXX )
 set_source_files_properties(src/futil.c  PROPERTIES LANGUAGE CXX )
 set_source_files_properties(src/pdbatom.c  PROPERTIES LANGUAGE CXX )
@@ -65,9 +66,9 @@ set_source_files_properties(src/protpred-Gromacs-Test_compute_Diehdral.c PROPERT
 set_source_files_properties(src/protpred-Gromacs-Test_rotation.c PROPERTIES LANGUAGE CXX )
 set_source_files_properties(src/protpred-Gromacs-Test_load_population.c PROPERTIES LANGUAGE CXX )
 set_source_files_properties(src/protpred-Gromacs-Test_compute_objetivies.c PROPERTIES LANGUAGE CXX )
-set_source_files_properties(src/protpred-Gromacs-Test_random_number
-.c PROPERTIES LANGUAGE CXX )
+set_source_files_properties(src/protpred-Gromacs-Test_random_number.c PROPERTIES LANGUAGE CXX )
 set_source_files_properties(src/protpred-Gromacs-Test_dm_refinement.c PROPERTIES LANGUAGE CXX )
+set_source_files_properties(src/test-simple.c PROPERTIES LANGUAGE CXX )
 set_source_files_properties(src/maphash.c PROPERTIES LANGUAGE CXX )
 
 # set include
@@ -79,6 +80,7 @@ src/LoadConfig.c
 src/ea_mono.c 
 src/topology.c 
 src/pdbio.c 
+src/pdbqtio.c 
 src/protein.c 
 src/futil.c 
 src/pdbatom.c 
@@ -155,6 +157,9 @@ target_link_libraries(protpred-Gromacs-Test_random_number 2PG_lib)
 add_executable(protpred-Gromacs-Test_dm_refinement src/protpred-Gromacs-Test_dm_refinement.c)
 target_link_libraries(protpred-Gromacs-Test_dm_refinement 2PG_lib)
 
+add_executable(test-simple src/test-simple.c)
+target_link_libraries(test-simple 2PG_lib)
+
 # install
 install(TARGETS protpred-Gromacs-NSGA2 DESTINATION bin)
 install(TARGETS protpred-Gromacs-Dominance DESTINATION bin)
@@ -171,6 +176,7 @@ install(TARGETS protpred-Gromacs-Test_load_population DESTINATION bin)
 install(TARGETS protpred-Gromacs-Test_compute_objetivies DESTINATION bin)
 install(TARGETS protpred-Gromacs-Test_random_number DESTINATION bin)
 install(TARGETS protpred-Gromacs-Test_dm_refinement DESTINATION bin)
+install(TARGETS test-simple DESTINATION bin)
 
 #Coping script directory
 install(DIRECTORY scripts/ DESTINATION scripts 
