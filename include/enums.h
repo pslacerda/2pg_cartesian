@@ -25,7 +25,8 @@ typedef enum type_aminos type_aminos_t;
  * _plus represents next residue
  *
  */
-enum type_atoms { atmC, atmCA, atmCB, atmCG,atmCG1, atmCG2,
+enum type_atoms { atmUNKNOWN,
+                     atmC, atmCA, atmCB, atmCG,atmCG1, atmCG2,
 	             atmCD, atmCD1, atmCD2,
 	             atmCE, atmCE1, atmCE2, atmCE3,
 	             atmCH2,

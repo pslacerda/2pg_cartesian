@@ -32,6 +32,9 @@ void writeATOM(FILE *pdbfile, const pdb_atom_t *atoms, const int *npdb );
 void writeModel(FILE *pdbfile, const int *model);
 void writeEndModel(FILE *pdbfile);
 
+void load_pdbqt_file(pdb_atom_t *atoms, int *num_atoms,
+        top_residue_atom_info_t *chis, int *num_chis, const char *fname);
+
 #ifdef __cplusplus
 }
 #endif

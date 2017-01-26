@@ -12,21 +12,20 @@
 *.so.*
 *.dylib
 
-# Executables
-*.exe
-*.out
-*.app
-protpred-Gromacs-Random_Algorithm_PSP
-protpred-Gromacs-MC_Metropolis_PSP
-protpred-Gromacs-Mono_PSP
-protpred-Gromacs-Dominance
-protpred-Gromacs-NSGA2_PSP
-protpred-Gromacs-Sort_Method_by_Front_Dominance
-protpred-Gromacs-Sort_Method_Files_by_Front_Dominance
-
 #Directory
 build/
 Debug/
+nbproject/
 
 #TXT files
 src/*.txt
+
+# CMake files
+CMakeCache.txt
+CMakeFiles/
+CMakeScripts
+Makefile
+cmake_install.cmake
+install_manifest.txt
+compile_commands.json
+

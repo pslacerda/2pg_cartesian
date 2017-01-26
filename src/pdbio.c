@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <algorithm>
 
 #include "defines.h"
 #include "enums.h"
@@ -349,4 +350,104 @@ void load_pdb_model_file(pdb_atom_t **atoms, pdb_seqres_t *seqres,
 	free(fname);	
 }
 
+int test_begining_chi(char* line) {
+    return strncmp(line,"ROOT",4) == 0 || strncmp(line,"BRANCH",6) == 0;
+}
 
+int test_ending_chi(char* line) {
+    return strncmp(line,"ENDROOT",7) == 0 || strncmp(line,"ENDBRANCH",9) == 0;
+}
+
+int test_atom(char* line) {
+    return strncmp(line,"ATOM",4) == 0;
+}
+
+void load_pdbqt_file(pdb_atom_t *atoms, int *num_atoms,
+        top_residue_atom_info_t *chis, int *num_chis, const char *fname) {
+    FILE *pdbfile=NULL;
+    char pdbqt_contents [MAX_LINE_PDB][MAX_LINE_PDB];
+    int branch_table[128][3];
+    int atom_table[128];
+    int num_fixed = -1;
+    int num_moved = -1;
+    int table_cursor = 0;
+    int line_max = -1;
+    int line_cursor1 = 0;
+    int line_cursor2 = -1;
+    int depth_level = -1;
+    int discount_num_atoms = 0;
+    
+    *num_atoms = 0;
+    *num_chis = -1;
+    
+    pdbfile = open_file(fname, fREAD);
+    while (fgets(pdbqt_contents[line_cursor1++],MAX_LINE_PDB,pdbfile) != NULL);
+    line_max = line_cursor1;
+    
+    for (line_cursor1 = 0; line_cursor1 < line_max; line_cursor1++) {
+        if (test_atom(pdbqt_contents[line_cursor1])) {
+            atom_table[line_cursor1] = (*num_atoms)++;
+        }
+        else if (test_begining_chi(pdbqt_contents[line_cursor1])) {
+            line_cursor2 = line_cursor1+1;
+            depth_level = 0;
+            discount_num_atoms = 0;
+            for (;;) {
+                if (test_begining_chi(pdbqt_contents[line_cursor2])) {
+                    depth_level++;
+                    discount_num_atoms++;
+                }
+                else if (test_ending_chi(pdbqt_contents[line_cursor2])) {
+                    if (depth_level == 0) {
+                        break;
+                    }
+                    discount_num_atoms++;
+                    depth_level--;
+                }
+                line_cursor2++;
+            }
+            branch_table[table_cursor][0] = line_cursor1;
+            branch_table[table_cursor][1] = line_cursor2;
+            branch_table[table_cursor][2] = discount_num_atoms;
+            table_cursor++;
+        }
+    }
+    *num_chis = table_cursor;
+    
+    atoms = allocate_pdbatom(num_atoms);
+    chis = Malloc(top_residue_atom_info_t, *num_chis);
+    
+    *num_atoms = 0;
+    for (line_cursor1 = 0; line_cursor1 < line_max; line_cursor1++) {
+        if (test_atom(pdbqt_contents[line_cursor1])) {
+            load_pdb_atoms(pdbqt_contents[line_cursor1], atoms, num_atoms);
+            (*num_atoms)++;
+        }
+    }
+    
+    for (table_cursor = 0; table_cursor < *num_chis; table_cursor++) {
+        num_fixed = branch_table[table_cursor][1]
+                  - branch_table[table_cursor][0]
+                  - branch_table[table_cursor][2] - 1;
+        num_moved = *num_atoms - num_fixed;
+        
+        chis[table_cursor].num_fixed = num_fixed;
+        chis[table_cursor].num_moved = num_moved;
+        chis[table_cursor].fixed_atoms = Malloc(int, num_fixed);
+        chis[table_cursor].moved_atoms = Malloc(int, num_moved);
+        
+        num_fixed = 0;
+        num_moved = 0;
+        for (line_cursor1 = 0; line_cursor1 < line_max; line_cursor1++) {
+            if (line_cursor1 > branch_table[table_cursor][0]
+                    && line_cursor1 < branch_table[table_cursor][1]) {
+                chis[table_cursor].fixed_atoms[num_fixed++] =
+                        atom_table[line_cursor1];
+            } else if (test_atom(pdbqt_contents[line_cursor1])) {
+                chis[table_cursor].moved_atoms[num_moved++] = atom_table[line_cursor1];
+            }
+        }
+    }
+    
+    fclose(pdbfile);
+}

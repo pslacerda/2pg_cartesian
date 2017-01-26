@@ -346,8 +346,7 @@ type_atoms_t get_atomid_from_atom_name(const  char *__atmname){
 	}else if (is_equal(__atmname,"CH3")){
 		return atmCH3;
 	}else{
-		sprintf(msg,"Not found out atom %s, check get_atomid_from_atom_name function.\n",__atmname);
-		fatal_error(msg);
+            return atmUNKNOWN;
 	}
 		
 }

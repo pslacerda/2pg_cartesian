@@ -16,8 +16,11 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /D _CRT_SECURE_NO_WARNINGS")
 endif ()
 
+# Set output directory
+SET (CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_HOME_DIRECTORY}/build/")
+
 # Set compiler flags
-SET ( CMAKE_CXX_FLAGS "-lm -pedantic")
+SET (CMAKE_CXX_FLAGS "-Wall -g -lm -pedantic")
 
 #Set CXX compiler for all files below
 set_source_files_properties(include/LoadConfig.h PROPERTIES LANGUAGE CXX )
@@ -32,7 +35,6 @@ set_source_files_properties(src/LoadConfig.c  PROPERTIES LANGUAGE CXX )
 set_source_files_properties(src/ea_mono.c  PROPERTIES LANGUAGE CXX )
 set_source_files_properties(src/topology.c  PROPERTIES LANGUAGE CXX )
 set_source_files_properties(src/pdbio.c  PROPERTIES LANGUAGE CXX )
-set_source_files_properties(src/pdbqtio.c  PROPERTIES LANGUAGE CXX )
 set_source_files_properties(src/protein.c  PROPERTIES LANGUAGE CXX )
 set_source_files_properties(src/futil.c  PROPERTIES LANGUAGE CXX )
 set_source_files_properties(src/pdbatom.c  PROPERTIES LANGUAGE CXX )
@@ -80,7 +82,6 @@ src/LoadConfig.c
 src/ea_mono.c 
 src/topology.c 
 src/pdbio.c 
-src/pdbqtio.c 
 src/protein.c 
 src/futil.c 
 src/pdbatom.c 
